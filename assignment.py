@@ -5,228 +5,58 @@ import streamlit as st
 
 
 # ============================================================
-# DATA LOADING
+# LOAD DATA
 # ============================================================
 
 DATA_FILE = Path(__file__).parent / "Data.csv"
 
 data = pd.read_csv(DATA_FILE)
 
-# Remove accidental spaces from column names and text values
+# Clean column names
 data.columns = data.columns.str.strip()
 
+# Clean text values
 for column in data.select_dtypes(include="object").columns:
-    data[column] = data[column].str.strip()
+    data[column] = data[column].fillna("").astype(str).str.strip()
 
 
 # ============================================================
-# USER-FRIENDLY INDICATOR MAPPING
-# ============================================================
-# These choices are the words the user sees in the app.
-# Each choice is mapped to indicator names that already exist
-# in the CSV file.
-#
-# IMPORTANT:
-# Only use mappings that match the actual Indicator_Name
-# values in your Data.csv.
+# PAGE SETUP
 # ============================================================
 
-USER_INDICATORS = {
-    "Rainfall": {
-        "Very little or no rain": [
-            "Decreased rainfall",
-            "Little to no rainfall",
-            "Decreased rain"
-        ],
-        "Some rain": [
-            "Some days are cool and rainy",
-            "Some rainfall"
-        ],
-        "Frequent or heavy rain": [
-            "Wettest time of the year",
-            "Heavy rainfall",
-            "Frequent rainfall"
-        ],
-    },
-
-    "Temperature": {
-        "Very hot": [
-            "Hot weather",
-            "Very hot"
-        ],
-        "Warm": [
-            "Warm weather",
-            "Warm"
-        ],
-        "Mild or changing temperatures": [
-            "Mild weather",
-            "Changing temperatures"
-        ],
-        "Cool": [
-            "Cool weather",
-            "Cool"
-        ],
-        "Very cold": [
-            "Cold weather",
-            "Very cold"
-        ],
-    },
-
-    "Weather": {
-        "Sunny or clear": [
-            "Sunny",
-            "Clear skies",
-            "Clear weather"
-        ],
-        "Cloudy": [
-            "Cloudy",
-            "Clouds"
-        ],
-        "Strong winds": [
-            "Strong winds",
-            "Windy"
-        ],
-        "Storms": [
-            "Storms",
-            "Stormy weather"
-        ],
-    },
-
-    "Plants": {
-        "Flowers are blooming": [
-            "Flowers blooming",
-            "Flowering"
-        ],
-        "Banksias are flowering": [
-            "Banksias flowering",
-            "Banksia flowering"
-        ],
-        "Eucalypts are flowering": [
-            "Eucalypts flowering",
-            "Eucalyptus flowering"
-        ],
-        "Trees are flowering or changing": [
-            "Trees changing",
-            "Trees flowering"
-        ],
-        "Fruits or seeds are developing": [
-            "Fruits developing",
-            "Seeds developing",
-            "Fruits and seeds"
-        ],
-    },
-
-    "Animals": {
-        "Frogs are active": [
-            "Frogs active",
-            "Frog activity"
-        ],
-        "Reptiles are active": [
-            "Reptiles active",
-            "Reptile activity"
-        ],
-        "Kangaroos are active": [
-            "Kangaroos active",
-            "Kangaroo activity"
-        ],
-        "Birds are nesting or breeding": [
-            "Birds nesting",
-            "Birds breeding"
-        ],
-        "Young animals are appearing": [
-            "Young animals",
-            "Young animals appearing"
-        ],
-    },
-
-    "Activities": {
-        "Fire or burning is occurring": [
-            "Fire",
-            "Burning",
-            "Fire/burning"
-        ],
-        "Fishing is important": [
-            "Fishing"
-        ],
-        "Animals are moving": [
-            "Animals moving"
-        ],
-        "People are gathering": [
-            "People gathering"
-        ],
-    }
-}
-
-
-# ============================================================
-# CLEAN THE MAPPING
-# ============================================================
-# Only keep mapped indicator names that actually occur in the
-# CSV. This prevents the program from accidentally using
-# invented indicators that are not present in the dataset.
-# ============================================================
-
-actual_indicators = set(
-    data["Indicator_Name"]
-    .dropna()
-    .astype(str)
-    .str.strip()
-    .unique()
+st.set_page_config(
+    page_title="Noongar Seasonal Calendar",
+    page_icon="🌿",
+    layout="wide"
 )
 
-valid_user_indicators = {}
-
-for category, choices in USER_INDICATORS.items():
-    valid_user_indicators[category] = {}
-
-    for friendly_name, csv_names in choices.items():
-        matching_names = [
-            name for name in csv_names
-            if name in actual_indicators
-        ]
-
-        if matching_names:
-            valid_user_indicators[category][friendly_name] = matching_names
-
 
 # ============================================================
-# SEASON SCORING ALGORITHM
+# HELPER FUNCTIONS
 # ============================================================
 
 def calculate_season_scores(dataset, selected_indicators):
     """
-    Calculate how strongly each season matches the user's
-    environmental observations.
+    Compare the user's selected environmental indicators
+    against the indicators recorded for each season.
 
-    Each unique Season_Name + Indicator_Name combination
-    counts as one possible match.
-
-    Returns a dictionary containing the score for each season.
+    Each matching indicator contributes one point.
     """
 
-    seasons = sorted(
-        dataset["Season_Name"]
-        .dropna()
-        .unique()
-    )
+    seasons = sorted(dataset["Season_Name"].unique())
 
     scores = {}
 
-    unique_data = dataset[
-        ["Season_Name", "Indicator_Name"]
-    ].drop_duplicates()
-
-    selected_indicators = set(selected_indicators)
-
     for season in seasons:
 
-        season_data = unique_data[
-            unique_data["Season_Name"] == season
+        season_data = dataset[
+            dataset["Season_Name"] == season
         ]
 
+        # Use unique indicator names so duplicate descriptions
+        # do not give a season extra points.
         season_indicators = set(
-            season_data["Indicator_Name"]
-            .dropna()
+            season_data["Indicator_Name"].str.strip()
         )
 
         matches = season_indicators.intersection(
@@ -238,56 +68,179 @@ def calculate_season_scores(dataset, selected_indicators):
     return scores
 
 
-# ============================================================
-# FIND MATCHED INDICATORS
-# ============================================================
+def get_season_information(dataset, season):
+    """Return the information associated with a season."""
 
-def get_season_matches(dataset, season, selected_indicators):
-    """
-    Return the indicators selected by the user that occur
-    in the chosen season.
-    """
-
-    season_data = dataset[
-        dataset["Season_Name"] == season
-    ]
-
-    season_indicators = set(
-        season_data["Indicator_Name"]
-        .dropna()
-    )
-
-    return sorted(
-        season_indicators.intersection(
-            set(selected_indicators)
-        )
+    return (
+        dataset[
+            dataset["Season_Name"] == season
+        ]
+        .drop_duplicates()
     )
 
 
 # ============================================================
-# PAGE CONFIGURATION
+# USER-FRIENDLY OPTIONS
+# ============================================================
+#
+# These are based ONLY on indicators that actually occur
+# in the edited CSV.
+#
+# The text shown to the user is easier to understand, while
+# the value in each list is the actual Indicator_Name used
+# by the dataset.
 # ============================================================
 
-st.set_page_config(
-    page_title="Noongar Seasonal Calendar",
-    page_icon="🌿",
-    layout="wide"
+USER_OPTIONS = {
+
+    "🌧️ Rainfall": {
+        "Little or no rainfall": ["Rain"],
+        "Some rain": ["Rain"],
+        "Wettest time of the year": ["Rain"],
+        "Rain is increasing/decreasing": ["Rain"],
+    },
+
+    "🌡️ Temperature": {
+        "Warm temperatures": ["Warm Temperatures"],
+        "Cool temperatures": ["Cool Temperatures"],
+        "Cold / coldest conditions": ["Temperature"],
+        "Changing / transitional temperature": ["Temperature"],
+    },
+
+    "💨 Weather conditions": {
+        "Dry conditions": ["Dry"],
+        "Windy conditions": ["Winds"],
+        "Storms": ["Storms"],
+        "Cloudy skies": ["Clouds"],
+        "Clear skies": ["Skies"],
+        "Snow": ["Snow"],
+        "Water levels are increasing": ["Water"],
+    },
+
+    "🌱 Plants and flowers": {
+        "Flowers are appearing": ["Flowers"],
+        "Banksia is flowering": ["Banksia"],
+        "Eucalypts are present": ["Eucalypts"],
+        "Acacias are flowering": ["Acacias", "Golden Acacias"],
+        "Grass trees are flowering": [
+            "Balgas (grass trees)",
+            "(Balgas) grass trees"
+        ],
+        "Trees are flowering": [
+            "Paperbark tree",
+            "Moodjar (Christmas tree)",
+            "Jarrah",
+            "Marri"
+        ],
+        "Berries or fruits are developing": [
+            "berries",
+            "Flowering fruits",
+            "Quandong trees"
+        ],
+    },
+
+    "🐾 Animals": {
+        "Frogs are active": [
+            "Frogs",
+            "frogs",
+            "frogs (kooyal)",
+            "kwooyar (moaning frogs)",
+            "kooboolong (motorbike frog)"
+        ],
+        "Reptiles are active": [
+            "Reptiles",
+            "reptiles",
+            "snakes",
+            "snake (Waugal)"
+        ],
+        "Kangaroos are present": [
+            "Yonga (Kangaroo)"
+        ],
+        "Birds are nesting or breeding": [
+            "Breeding",
+            "Mali (Black Swan)",
+            "Koolbardi (Magpie)",
+            "Koolbardies (Magpies)"
+        ],
+        "Young animals are appearing": [
+            "Fledgings",
+            "baby birds",
+            "adolescent animals"
+        ],
+        "Fish are abundant": [
+            "Fish",
+            "freshwater fish",
+            "Salmon",
+            "Herring",
+            "Mullet",
+            "bream"
+        ],
+    },
+
+    "🔥 Activities": {
+        "Mosaic burning": ["Mosaic Burning"],
+        "Fishing": ["Fishing", "fishing"],
+        "Movement between areas": ["Movement", "movement"],
+        "People gathering socially": [
+            "social",
+            "social time"
+        ],
+        "Eating / food gathering": ["eating"],
+        "Young/newborn animals": ["Young"],
+    }
+}
+
+
+# ============================================================
+# CHECK THAT MAPPED VALUES EXIST IN THE DATA
+# ============================================================
+
+actual_indicators = set(
+    data["Indicator_Name"]
+    .dropna()
+    .str.strip()
+    .unique()
 )
 
+valid_options = {}
+
+for category, options in USER_OPTIONS.items():
+
+    valid_options[category] = {}
+
+    for friendly_name, csv_indicators in options.items():
+
+        valid_indicators = [
+            indicator
+            for indicator in csv_indicators
+            if indicator in actual_indicators
+        ]
+
+        if valid_indicators:
+            valid_options[category][friendly_name] = (
+                valid_indicators
+            )
+
 
 # ============================================================
-# SIDEBAR NAVIGATION
+# SIDEBAR
 # ============================================================
 
-st.sidebar.title("🌿 Navigation")
+st.sidebar.title("🌿 Noongar Seasonal Calendar")
 
 page = st.sidebar.radio(
-    "Choose a page:",
+    "Navigate to:",
     [
         "Season Finder",
         "Explore Seasons",
         "Data & Visualisations"
     ]
+)
+
+st.sidebar.divider()
+
+st.sidebar.caption(
+    f"{len(data)} records loaded"
 )
 
 
@@ -297,159 +250,48 @@ page = st.sidebar.radio(
 
 if page == "Season Finder":
 
-    st.title("🌿 Noongar Seasonal Calendar")
+    st.title("🌿 Find the Season")
 
     st.write(
-        "Select the environmental conditions you are observing "
-        "to find the season that best matches the available data."
+        "Select the environmental conditions you are observing. "
+        "The app will compare your observations with the seasonal "
+        "indicators in the dataset."
     )
 
     st.info(
-        "Select as many observations as apply. "
-        "The app compares your selections with the indicators "
-        "recorded for each season."
+        "You can select multiple observations from each category."
     )
 
     st.divider()
 
-    # Store all selected CSV indicators here
-    selected_indicators = []
+    selected_indicators = set()
 
     # --------------------------------------------------------
-    # RAINFALL
+    # DISPLAY USER OPTIONS
     # --------------------------------------------------------
 
-    st.subheader("🌧️ Rainfall")
+    for category, options in valid_options.items():
 
-    rainfall_options = list(
-        valid_user_indicators.get("Rainfall", {}).keys()
-    )
+        st.subheader(category)
 
-    if rainfall_options:
-        rainfall = st.multiselect(
-            "What is the rainfall like?",
-            rainfall_options
+        choices = list(options.keys())
+
+        selected = st.multiselect(
+            f"Select observations:",
+            choices,
+            key=category
         )
 
-        for choice in rainfall:
-            selected_indicators.extend(
-                valid_user_indicators["Rainfall"][choice]
-            )
+        for choice in selected:
 
-    # --------------------------------------------------------
-    # TEMPERATURE
-    # --------------------------------------------------------
+            for indicator in options[choice]:
 
-    st.subheader("🌡️ Temperature")
-
-    temperature_options = list(
-        valid_user_indicators.get("Temperature", {}).keys()
-    )
-
-    if temperature_options:
-        temperature = st.multiselect(
-            "What is the temperature like?",
-            temperature_options
-        )
-
-        for choice in temperature:
-            selected_indicators.extend(
-                valid_user_indicators["Temperature"][choice]
-            )
-
-    # --------------------------------------------------------
-    # WEATHER
-    # --------------------------------------------------------
-
-    st.subheader("☁️ Weather")
-
-    weather_options = list(
-        valid_user_indicators.get("Weather", {}).keys()
-    )
-
-    if weather_options:
-        weather = st.multiselect(
-            "What weather conditions are you observing?",
-            weather_options
-        )
-
-        for choice in weather:
-            selected_indicators.extend(
-                valid_user_indicators["Weather"][choice]
-            )
-
-    # --------------------------------------------------------
-    # PLANTS
-    # --------------------------------------------------------
-
-    st.subheader("🌱 Plants")
-
-    plant_options = list(
-        valid_user_indicators.get("Plants", {}).keys()
-    )
-
-    if plant_options:
-        plants = st.multiselect(
-            "What are you observing in plants?",
-            plant_options
-        )
-
-        for choice in plants:
-            selected_indicators.extend(
-                valid_user_indicators["Plants"][choice]
-            )
-
-    # --------------------------------------------------------
-    # ANIMALS
-    # --------------------------------------------------------
-
-    st.subheader("🦘 Animals")
-
-    animal_options = list(
-        valid_user_indicators.get("Animals", {}).keys()
-    )
-
-    if animal_options:
-        animals = st.multiselect(
-            "What are you observing in animals?",
-            animal_options
-        )
-
-        for choice in animals:
-            selected_indicators.extend(
-                valid_user_indicators["Animals"][choice]
-            )
-
-    # --------------------------------------------------------
-    # ACTIVITIES
-    # --------------------------------------------------------
-
-    st.subheader("🔥 Activities")
-
-    activity_options = list(
-        valid_user_indicators.get("Activities", {}).keys()
-    )
-
-    if activity_options:
-        activities = st.multiselect(
-            "What activities or seasonal events are occurring?",
-            activity_options
-        )
-
-        for choice in activities:
-            selected_indicators.extend(
-                valid_user_indicators["Activities"][choice]
-            )
-
-    # Remove duplicate indicators
-    selected_indicators = list(
-        set(selected_indicators)
-    )
+                selected_indicators.add(indicator)
 
     st.divider()
 
     # --------------------------------------------------------
-    # FIND SEASON BUTTON
+    # FIND SEASON
     # --------------------------------------------------------
 
     if st.button(
@@ -457,11 +299,10 @@ if page == "Season Finder":
         type="primary"
     ):
 
-        if not selected_indicators:
+        if len(selected_indicators) == 0:
 
             st.warning(
-                "Please select at least one environmental "
-                "observation before finding a season."
+                "Please select at least one observation."
             )
 
         else:
@@ -471,7 +312,6 @@ if page == "Season Finder":
                 selected_indicators
             )
 
-            # Sort seasons from highest score to lowest score
             ranked_seasons = sorted(
                 scores.items(),
                 key=lambda item: item[1],
@@ -481,16 +321,15 @@ if page == "Season Finder":
             best_season = ranked_seasons[0][0]
             best_score = ranked_seasons[0][1]
 
-            # Check whether there were any matches
+            # ------------------------------------------------
+            # NO MATCHES
+            # ------------------------------------------------
+
             if best_score == 0:
 
                 st.warning(
-                    "No season in the dataset matched the "
-                    "selected observations."
-                )
-
-                st.write(
-                    "Try selecting different observations."
+                    "There were no direct matches between "
+                    "your observations and the dataset."
                 )
 
             else:
@@ -500,87 +339,88 @@ if page == "Season Finder":
                 )
 
                 st.metric(
-                    "Number of matching indicators",
+                    "Matching indicators",
                     best_score
                 )
 
                 # ------------------------------------------------
-                # SHOW SEASON INFORMATION
+                # SEASON INFORMATION
                 # ------------------------------------------------
 
-                season_rows = data[
-                    data["Season_Name"] == best_season
-                ]
-
-                if not season_rows.empty:
-
-                    st.subheader(
-                        f"About {best_season}"
-                    )
-
-                    info_columns = []
-
-                    for column in [
-                        "English_Equivalent",
-                        "Start_Month",
-                        "End_Month"
-                    ]:
-                        if column in season_rows.columns:
-                            info_columns.append(column)
-
-                    if info_columns:
-
-                        info = (
-                            season_rows[
-                                info_columns
-                            ]
-                            .drop_duplicates()
-                            .reset_index(drop=True)
-                        )
-
-                        st.dataframe(
-                            info,
-                            use_container_width=True,
-                            hide_index=True
-                        )
-
-                # ------------------------------------------------
-                # SHOW MATCHED INDICATORS
-                # ------------------------------------------------
-
-                matches = get_season_matches(
+                season_data = get_season_information(
                     data,
-                    best_season,
-                    selected_indicators
+                    best_season
                 )
 
-                if matches:
+                st.subheader(
+                    f"About {best_season}"
+                )
 
-                    st.subheader(
-                        "Matching indicators"
-                    )
+                first_row = season_data.iloc[0]
 
-                    for indicator in matches:
-                        st.write(f"✓ {indicator}")
+                col1, col2, col3 = st.columns(3)
+
+                col1.metric(
+                    "English equivalent",
+                    first_row["English_Equivalent"]
+                )
+
+                col2.metric(
+                    "Start",
+                    first_row["Start_of_month"]
+                )
+
+                col3.metric(
+                    "End",
+                    first_row["End_of_month"]
+                )
 
                 # ------------------------------------------------
-                # SHOW RANKING
+                # MATCHING INDICATORS
+                # ------------------------------------------------
+
+                matching_indicators = []
+
+                for indicator in selected_indicators:
+
+                    if indicator in set(
+                        season_data["Indicator_Name"]
+                    ):
+                        matching_indicators.append(
+                            indicator
+                        )
+
+                if matching_indicators:
+
+                    st.subheader(
+                        "Why this season matched"
+                    )
+
+                    for indicator in sorted(
+                        matching_indicators
+                    ):
+                        st.write(
+                            f"✓ {indicator}"
+                        )
+
+                # ------------------------------------------------
+                # SEASON RANKING
                 # ------------------------------------------------
 
                 st.subheader(
                     "Season matching scores"
                 )
 
-                ranking_data = pd.DataFrame(
+                ranking = pd.DataFrame(
                     ranked_seasons,
                     columns=[
                         "Season",
-                        "Matches"
+                        "Matching indicators"
                     ]
                 )
 
                 st.dataframe(
-                    ranking_data,
+                    ranking,
                     use_container_width=True,
                     hide_index=True
                 )
@@ -595,18 +435,16 @@ elif page == "Explore Seasons":
     st.title("🌿 Explore the Seasons")
 
     st.write(
-        "Choose a season to explore the environmental indicators "
-        "recorded in the dataset."
+        "Explore the environmental, plant, animal and activity "
+        "indicators recorded for each season."
     )
 
     seasons = sorted(
-        data["Season_Name"]
-        .dropna()
-        .unique()
+        data["Season_Name"].unique()
     )
 
     selected_season = st.selectbox(
-        "Select a season:",
+        "Choose a season:",
         seasons
     )
 
@@ -622,107 +460,70 @@ elif page == "Explore Seasons":
 
     st.header(selected_season)
 
-    if "English_Equivalent" in season_data.columns:
+    first_row = season_data.iloc[0]
 
-        english_names = (
-            season_data["English_Equivalent"]
-            .dropna()
-            .unique()
-        )
+    col1, col2, col3 = st.columns(3)
 
-        if len(english_names) > 0:
+    col1.metric(
+        "English equivalent",
+        first_row["English_Equivalent"]
+    )
 
-            st.write(
-                f"**English equivalent:** "
-                f"{english_names[0]}"
-            )
+    col2.metric(
+        "Start",
+        first_row["Start_of_month"]
+    )
 
-    if "Start_Month" in season_data.columns:
-
-        start_months = (
-            season_data["Start_Month"]
-            .dropna()
-            .unique()
-        )
-
-        if len(start_months) > 0:
-
-            st.write(
-                f"**Start month:** "
-                f"{start_months[0]}"
-            )
-
-    if "End_Month" in season_data.columns:
-
-        end_months = (
-            season_data["End_Month"]
-            .dropna()
-            .unique()
-        )
-
-        if len(end_months) > 0:
-
-            st.write(
-                f"**End month:** "
-                f"{end_months[0]}"
-            )
+    col3.metric(
+        "End",
+        first_row["End_of_month"]
+    )
 
     st.divider()
 
     # --------------------------------------------------------
-    # INDICATORS BY TYPE
+    # FILTER BY INDICATOR TYPE
     # --------------------------------------------------------
 
     st.subheader("Seasonal indicators")
 
-    if "Indicator_type" in season_data.columns:
+    indicator_types = sorted(
+        season_data["Indicator_type"].unique()
+    )
 
-        indicator_types = sorted(
-            season_data["Indicator_type"]
-            .dropna()
-            .unique()
-        )
+    selected_type = st.selectbox(
+        "Choose an indicator category:",
+        ["All"] + indicator_types
+    )
 
-        selected_type = st.selectbox(
-            "Choose an indicator type:",
-            indicator_types
-        )
+    if selected_type == "All":
 
-        filtered_data = season_data[
+        display_data = season_data
+
+    else:
+
+        display_data = season_data[
             season_data["Indicator_type"]
             == selected_type
         ]
 
-    else:
-
-        filtered_data = season_data
-
-    display_columns = [
-        column
-        for column in [
-            "Indicator_type",
-            "Indicator_Name",
-            "Description"
+    display_data = (
+        display_data[
+            [
+                "Indicator_type",
+                "Indicator_Name",
+                "Description"
+            ]
         ]
-        if column in filtered_data.columns
-    ]
+        .drop_duplicates()
+        .reset_index(drop=True)
+    )
 
-    if display_columns:
-
-        st.dataframe(
-            filtered_data[display_columns]
-            .drop_duplicates()
-            .reset_index(drop=True),
-            use_container_width=True,
-            hide_index=True
-        )
-
-    else:
-
-        st.warning(
-            "The expected indicator columns were not found "
-            "in the CSV file."
-        )
+    st.dataframe(
+        display_data,
+        use_container_width=True,
+        hide_index=True
+    )
 
 
 # ============================================================
@@ -734,14 +535,14 @@ elif page == "Data & Visualisations":
     st.title("📊 Data & Visualisations")
 
     st.write(
-        "Explore the number and types of seasonal indicators "
-        "contained in the dataset."
+        "Explore the dataset using summary statistics, "
+        "tables and charts."
     )
 
     st.divider()
 
     # --------------------------------------------------------
-    # DATASET SUMMARY
+    # SUMMARY
     # --------------------------------------------------------
 
     st.subheader("Dataset summary")
@@ -754,30 +555,28 @@ elif page == "Data & Visualisations":
     )
 
     col2.metric(
-        "Number of seasons",
+        "Seasons",
         data["Season_Name"].nunique()
     )
 
     col3.metric(
         "Indicator types",
         data["Indicator_type"].nunique()
-        if "Indicator_type" in data.columns
-        else 0
     )
 
     st.divider()
 
     # --------------------------------------------------------
-    # INDICATORS PER SEASON
+    # RECORDS PER SEASON
     # --------------------------------------------------------
 
     st.subheader(
-        "Number of indicators recorded for each season"
+        "Number of records per season"
     )
 
     season_counts = (
-        data.groupby("Season_Name")
-        .size()
+        data["Season_Name"]
+        .value_counts()
         .sort_values(ascending=False)
     )
 
@@ -786,74 +585,72 @@ elif page == "Data & Visualisations":
     )
 
     # --------------------------------------------------------
-    # INDICATOR TYPE COUNTS
+    # INDICATORS BY TYPE
     # --------------------------------------------------------
 
-    if "Indicator_type" in data.columns:
+    st.subheader(
+        "Number of records by indicator type"
+    )
 
-        st.subheader(
-            "Indicators by type"
-        )
+    type_counts = (
+        data["Indicator_type"]
+        .value_counts()
+        .sort_values(ascending=False)
+    )
 
-        type_counts = (
-            data["Indicator_type"]
-            .value_counts()
-        )
-
-        st.bar_chart(
-            type_counts
-        )
+    st.bar_chart(
+        type_counts
+    )
 
     # --------------------------------------------------------
     # UNIQUE INDICATORS
     # --------------------------------------------------------
 
     st.subheader(
-        "Unique indicators"
+        "Most frequently recorded indicators"
     )
 
-    unique_indicators = (
+    indicator_counts = (
         data["Indicator_Name"]
         .value_counts()
-        .reset_index()
+        .head(20)
     )
 
-    unique_indicators.columns = [
-        "Indicator",
-        "Number of records"
-    ]
+    st.bar_chart(
+        indicator_counts
+    )
+
+    # --------------------------------------------------------
+    # FILTER DATA
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Explore the dataset"
+    )
+
+    selected_type = st.selectbox(
+        "Filter by indicator type:",
+        ["All"] +
+        sorted(data["Indicator_type"].unique())
+    )
+
+    if selected_type == "All":
+
+        filtered_data = data
+
+    else:
+
+        filtered_data = data[
+            data["Indicator_type"] == selected_type
+        ]
 
     st.dataframe(
-        unique_indicators,
+        filtered_data,
         use_container_width=True,
         hide_index=True
     )
 
-    # --------------------------------------------------------
-    # RAW DATA OPTION
-    # --------------------------------------------------------
-
-    st.divider()
-
-    with st.expander("View dataset"):
-
-        st.dataframe(
-            data,
-            use_container_width=True,
-            hide_index=True
-        )
-
 
 # ============================================================
-# FOOTER
+# END
 # ============================================================
-
-st.sidebar.divider()
-
-st.sidebar.caption(
-    "CITS 1501 Introduction to Programming with Python"
-)
-
-st.sidebar.caption(
-    f"{len(data)} records loaded from Data.csv"
-)
