@@ -93,101 +93,115 @@ def get_season_information(dataset, season):
 
 USER_OPTIONS = {
 
-    "🌧️ Rainfall": {
-        "Little or no rainfall": ["Rain"],
-        "Some rain": ["Rain"],
-        "Wettest time of the year": ["Rain"],
-        "Rain is increasing/decreasing": ["Rain"],
-    },
+    "🌧️ Rainfall": [
+        "Rain",
+        "Water",
+    ],
 
-    "🌡️ Temperature": {
-        "Warm temperatures": ["Warm Temperatures"],
-        "Cool temperatures": ["Cool Temperatures"],
-        "Cold / coldest conditions": ["Temperature"],
-        "Changing / transitional temperature": ["Temperature"],
-    },
+    "🌡️ Temperature": [
+        "Warm Temperatures",
+        "Cool Temperatures",
+        "Temperature",
+    ],
 
-    "💨 Weather conditions": {
-        "Dry conditions": ["Dry"],
-        "Windy conditions": ["Winds"],
-        "Storms": ["Storms"],
-        "Cloudy skies": ["Clouds"],
-        "Clear skies": ["Skies"],
-        "Snow": ["Snow"],
-        "Water levels are increasing": ["Water"],
-    },
+    "💨 Weather conditions": [
+        "Dry",
+        "Winds",
+        "Storms",
+        "Clouds",
+        "Skies",
+        "Snow",
+        "Fire season",
+    ],
 
-    "🌱 Plants and flowers": {
-        "Flowers are appearing": ["Flowers"],
-        "Banksia is flowering": ["Banksia"],
-        "Eucalypts are present": ["Eucalypts"],
-        "Acacias are flowering": ["Acacias", "Golden Acacias"],
-        "Grass trees are flowering": [
-            "Balgas (grass trees)",
-            "(Balgas) grass trees"
-        ],
-        "Trees are flowering": [
-            "Paperbark tree",
-            "Moodjar (Christmas tree)",
-            "Jarrah",
-            "Marri"
-        ],
-        "Berries or fruits are developing": [
-            "berries",
-            "Flowering fruits",
-            "Quandong trees"
-        ],
-    },
+    "🌱 Plants and flowers": [
+        "Moodjar (Christmas tree)",
+        "Paperbark tree",
+        "Banksia",
+        "Bull Banksia",
+        "Eucalypts",
+        "Acacias",
+        "Golden Acacias",
+        "Balgas (grass trees)",
+        "(Balgas) grass trees",
+        "Flowers",
+        "Orchids",
+        "Jarrah",
+        "Marri",
+        "Lilies",
+        "Purple Flags",
+        "White flowers",
+        "Red flowerings",
+        "Red-flowering Gum",
+        "Quandong trees",
+        "Sheoak trees",
+        "Sheoaks",
+        "Wild Carrots",
+        "Wild potatoes",
+        "Yanget (Bullrushes)",
+        "Blueberry Lilly",
+        "Rottnest Island daisy",
+        "berries",
+        "yams",
+        "tubers",
+        "djakat (roots)",
+        "djida (pink tuber roots)",
+        "jeeriji (zamia)",
+        "Female jeeriji (zamia)",
+        "meen (roots)",
+        "milya (samphire)",
+    ],
 
-    "🐾 Animals": {
-        "Frogs are active": [
-            "Frogs",
-            "frogs",
-            "frogs (kooyal)",
-            "kwooyar (moaning frogs)",
-            "kooboolong (motorbike frog)"
-        ],
-        "Reptiles are active": [
-            "Reptiles",
-            "reptiles",
-            "snakes",
-            "snake (Waugal)"
-        ],
-        "Kangaroos are present": [
-            "Yonga (Kangaroo)"
-        ],
-        "Birds are nesting or breeding": [
-            "Breeding",
-            "Mali (Black Swan)",
-            "Koolbardi (Magpie)",
-            "Koolbardies (Magpies)"
-        ],
-        "Young animals are appearing": [
-            "Fledgings",
-            "baby birds",
-            "adolescent animals"
-        ],
-        "Fish are abundant": [
-            "Fish",
-            "freshwater fish",
-            "Salmon",
-            "Herring",
-            "Mullet",
-            "bream"
-        ],
-    },
+    "🐾 Animals": [
+        "Frogs",
+        "frogs",
+        "frogs (kooyal)",
+        "kwooyar (moaning frogs)",
+        "kooboolong (motorbike frog)",
+        "Reptiles",
+        "reptiles",
+        "snakes",
+        "snake (Waugal)",
+        "Yonga (Kangaroo)",
+        "Breeding",
+        "Fledgings",
+        "baby birds",
+        "adolescent animals",
+        "Fish",
+        "freshwater fish",
+        "Salmon",
+        "Herring",
+        "Mullet",
+        "Marron",
+        "Gilgies",
+        "freshwater crayfish (gilgies)",
+        "gilgies (freshwater crayfish)",
+        "Tortoises",
+        "tortoises (yaarkin)",
+        "Emu",
+        "Waitj (emu)",
+        "weitj (emus)",
+        "Koolbardi (Magpie)",
+        "Koolbardies (Magpies)",
+        "magpies (Koolbardi)",
+        "Mali (Black Swan)",
+        "Whales",
+        "crabs",
+        "mussels",
+        "abalone",
+    ],
 
-    "🔥 Activities": {
-        "Mosaic burning": ["Mosaic Burning"],
-        "Fishing": ["Fishing", "fishing"],
-        "Movement between areas": ["Movement", "movement"],
-        "People gathering socially": [
-            "social",
-            "social time"
-        ],
-        "Eating / food gathering": ["eating"],
-        "Young/newborn animals": ["Young"],
-    }
+    "🔥 Activities": [
+        "Mosaic Burning",
+        "Fishing",
+        "fishing",
+        "Movement",
+        "movement",
+        "social",
+        "social time",
+        "eating",
+        "Young",
+    ]
 }
 
 
