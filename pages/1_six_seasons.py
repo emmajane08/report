@@ -52,12 +52,12 @@ season_pie = go.Figure(
         insidetextorientation="radial",
         marker={
             "colors": [
-                "#D9822B",
-                "#F2B544",
-                "#B86B4B",
-                "#3D6B82",
-                "#91A85A",
-                "#D6A84F",
+                "#F63131",
+                "#FF8040",
+                "#7BB66C",
+                "#82BFE5",
+                "#FF93BE",
+                "#FCE666",
             ],
             "line": {"color": "white", "width": 3},
         },
