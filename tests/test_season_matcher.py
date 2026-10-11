@@ -46,6 +46,27 @@ class SeasonMatcherTests(unittest.TestCase):
 
         self.assertEqual(scores["Birak"], 1)
 
+    def test_lowercase_user_selection_matches_rule(self):
+        data = pd.DataFrame(
+            [
+                {
+                    "Season_Name": "Birak",
+                    "Indicator_Name": "Magpies",
+                    "Description": "young ventures out, learning independence",
+                },
+                {
+                    "Season_Name": "Bunuru",
+                    "Indicator_Name": "Fledglings",
+                    "Description": "venturing out of nests",
+                },
+            ]
+        )
+
+        scores = calculate_season_scores(data, ["magpies", "fledglings"])
+
+        self.assertEqual(scores["Birak"], 1)
+        self.assertEqual(scores["Bunuru"], 1)
+
     def test_unknown_observation_is_rejected(self):
         data = pd.DataFrame(
             [{"Season_Name": "Birak", "Indicator_Name": "Rain", "Description": "Dry"}]
