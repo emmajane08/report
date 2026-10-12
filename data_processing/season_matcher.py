@@ -8,9 +8,6 @@ def _normalise(value: object) -> str:
     return " ".join(str(value).replace("\u00a0", " ").casefold().split())
 
 
-# Keep the option label and the matcher key identical in lowercase.
-# This is the simplest way to maintain the app: add a new UI option,
-# add the same lowercase key here, and the code does the rest.
 MATCH_RULES = {
     "fledglings": [{"name_terms": ("fledgling", "fledgings"), "description_terms": ("nest", "parents")}],
     "magpies": [{"name_terms": ("magpie", "koolbardi"), "description_terms": ("swooping", "protecting", "babies", "young")}],
@@ -151,19 +148,27 @@ def _matches_clause(row: Mapping[str, object], clause: Mapping[str, tuple[str, .
 def calculate_season_scores(data, selected_observations: Iterable[str]) -> dict[str, int]:
     """Score each season by the number of selected signs it contains."""
     selected = list(dict.fromkeys(selected_observations))
-    canonical_selected = [MATCH_ALIASES.get(_normalise(item), _normalise(item)) for item in selected]
+    canonical_selected = []
+    for item in selected:
+        observation = _normalise(item)
+        canonical_selected.append(MATCH_ALIASES.get(observation, observation))
+
     unknown = set(canonical_selected).difference(MATCH_RULES_BY_KEY)
     if unknown:
         raise ValueError(f"No matching rule is defined for: {', '.join(sorted(unknown))}")
 
-    scores = {season: 0 for season in sorted(data["Season_Name"].dropna().unique())}
+    season_rows = {
+        season: rows.to_dict("records")
+        for season, rows in data.groupby("Season_Name")
+    }
+    scores = {season: 0 for season in sorted(season_rows)}
 
     for observation in canonical_selected:
-        clauses = MATCH_RULES_BY_KEY[observation]
-        for season, season_rows in data.groupby("Season_Name"):
+        for season, rows in season_rows.items():
             if any(
-                any(_matches_clause(row, clause) for clause in clauses)
-                for row in season_rows.to_dict("records")
+                _matches_clause(row, clause)
+                for row in rows
+                for clause in MATCH_RULES_BY_KEY[observation]
             ):
                 scores[season] += 1
 
