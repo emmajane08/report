@@ -8,12 +8,8 @@ from content.season_information import SEASON_INFORMATION
 
 st.title("The Six Seasons")
 
-# Remember which season the user selected
-if "selected_season" not in st.session_state:
-    st.session_state.selected_season = None
-
-if "season_pie_version" not in st.session_state:
-    st.session_state.season_pie_version = 0
+st.session_state.setdefault("selected_season", None)
+st.session_state.setdefault("season_pie_version", 0)
 
 
 # ------------------------------------------------
@@ -21,14 +17,8 @@ if "season_pie_version" not in st.session_state:
 # ------------------------------------------------
 
 if st.session_state.selected_season:
-
     season = st.session_state.selected_season
-
-    display_season_information(
-        season,
-        SEASON_INFORMATION[season]
-    )
-
+    display_season_information(season, SEASON_INFORMATION[season])
     st.stop()
 
 
@@ -36,7 +26,16 @@ if st.session_state.selected_season:
 # SHOW THE SEASON PIE
 # ------------------------------------------------
 
-st.write("Select a slice to explore that season.")
+st.write("Click on a season displayed in the circle to learn more about it.")
+
+SEASON_COLORS = [
+    "#F63131",
+    "#FF8040",
+    "#7BB66C",
+    "#82BFE5",
+    "#FF93BE",
+    "#FCE666",
+]
 
 seasons = list(SEASON_INFORMATION)
 season_pie = go.Figure(
@@ -51,14 +50,7 @@ season_pie = go.Figure(
         textposition="inside",
         insidetextorientation="radial",
         marker={
-            "colors": [
-                "#D9822B",
-                "#F2B544",
-                "#B86B4B",
-                "#3D6B82",
-                "#91A85A",
-                "#D6A84F",
-            ],
+            "colors": SEASON_COLORS,
             "line": {"color": "white", "width": 3},
         },
         hovertemplate="%{label}<extra></extra>",
