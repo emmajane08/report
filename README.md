@@ -1,0 +1,34 @@
+# Noongar Seasonal Calendar
+An interactive Streamlit app for exploring the six seasons of the Noongar seasonal calendar, matching seasonal signs to a season, and viewing seasonal weather data.
+We acknowledge the Traditional Owners of Noongar Boodja and respect their continuing cultural knowledge, traditions and connection to Country. The information presented is based on publicly available sources, and we acknowledge the importance of respecting Noongar knowledge and the cultural significance of these seasonal indicators.
+
+# Features:
+-	Six Seasons: Explore Birak, Bunuru, Djeran, Makuru, Djilba, and Kambarang. Select a season from the interactive chart to read about its characteristics and view its sources
+-	Seasonal Match: Choose signs you’re observing – such as wildlife, plants, weather or temperature – and see which season/s match best
+-	Seasonal Indicators: Compare maximum and minimum temperatures and rainfall across the seasons, along with browsing the dataset
+
+# Run locally:
+1.	Make sure Python and ‘pip’ are installed
+2.	Clone the repository and open its directory
+3.	Install the dependencies:
+``` bash
+pip install -r requirements.txt
+```
+(Note: Dependences are listed in requirements.txt)
+4.	Start the app (open the local URL shown in the terminal):
+```bash
+Streamlit run app.py
+```
+
+# Project Contents:
+-	app.py – Streamlit app entry point and page navigation
+-	pages/ - The six seasons, seasonal match, and seasonal indicators 
+-	data/Data.csv - Seasonal indicators used by the app
+-	content/ - Season descriptions and source information
+-	data_processing/ - Dataset loading and season-matching logic
+-	components/ - Reusable season information display
+-	tests/ - Tests for data loading and season matching
+
+# Data:
+The app reads its seasonal indicator data from data/Data.csv. The season descriptions include source references in the app.
+Seasonal signs and timing can vary across Country. Use the app as an introduction to the information represented in its dataset, not as a substitute for guidance from Noongar knowledge holders.
