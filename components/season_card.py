@@ -17,6 +17,6 @@ def display_season_information(season, information):
 
     st.markdown("---")
 
-    st.caption(
-        f"Source: {information['source']}"
-    )
+    st.caption("Sources:")
+    for source in information["source"].split(";"):
+        st.caption(source.strip())

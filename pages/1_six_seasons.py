@@ -13,7 +13,7 @@ st.session_state.setdefault("season_pie_version", 0)
 
 
 # ------------------------------------------------
-# SHOW SEASON INFORMATION
+# SEASON INFORMATION
 # ------------------------------------------------
 
 if st.session_state.selected_season:
@@ -23,18 +23,18 @@ if st.session_state.selected_season:
 
 
 # ------------------------------------------------
-# SHOW THE SEASON PIE
+# SEASON PIE
 # ------------------------------------------------
 
 st.write("Click on a season displayed in the circle to learn more about it.")
 
 SEASON_COLORS = [
-    "#F63131",
-    "#FF8040",
-    "#7BB66C",
-    "#82BFE5",
+    "#FF6355",
+    "#FBA949",
+    "#8BD448",
+    "#2AA8F2",
     "#FF93BE",
-    "#FCE666",
+    "#FAE442",
 ]
 
 seasons = list(SEASON_INFORMATION)

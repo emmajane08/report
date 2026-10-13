@@ -20,8 +20,3 @@ def load_data():
         df[column] = df[column].fillna("").astype(str).str.strip()
 
     return df
-
-
-# whenever you need the dataset, you simply do:
-# from data_processing.data_loader import load_data
-# df = load_data()

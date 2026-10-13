@@ -1,4 +1,7 @@
 ﻿Region,Language_group,Season_Name,English_Equivalent,Start_of_month,End_of_month,Indicator_type,Indicator_Name,Description
+Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Weather,Rainfall (mm),14.3
+Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Weather,Max Temperature ℃,30.6
+Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Weather,Min Temperature ℃,17.4
 Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Weather,Rain,Decreased rainfall
 Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Weather,Warm Temperatures,Warm weather starts to take hold
 Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Weather,Cool Temperatures,Afternoons are cooler
@@ -33,6 +36,9 @@ Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Activities,Mo
 Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Activities,social ,blooming of the Moodjar traditionally prompted families to gather for ceremony
 Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Activities,Movement,moved towards the coast where the ocean provided plenty of fresh food
 Noongar Boodjar,Noongar,Birak,Season of the young,December,January,Colour,Red,"Red symbolises heat, sun and fire"
+Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Weather,Rainfall (mm),17.1
+Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Weather,Max Temperature ℃,30.8
+Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Weather,Min Temperature ℃,17.7
 Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Weather,Warm Temperatures,Hottest time of the year
 Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Weather,Rain,Little to no rainfall
 Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Weather,Winds,Hot easterly winds continue
@@ -66,6 +72,9 @@ Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Activities,M
 Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Activities,Fishing,spearfishing is practised for catching large fish
 Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Activities,Fishing,night fishing sometimes used Zamia palm leaves tied together to create a giant torchlight for light
 Noongar Boodjar,Noongar,Bunuru,season of adolescence,February,March,Activities,eating,freshwater and seafoods make up large portion of diet
+Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Weather,Rainfall (mm),61.6
+Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Weather,Max Temperature ℃,24.2
+Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Weather,Min Temperature ℃,12.2
 Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Weather,Cool Temperatures,the nights are cool in temperature and damper
 Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Weather,Cool Temperatures,the mornings are dewy
 Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Weather,Winds,light breezes from southerly directions (south east to south west)
@@ -94,6 +103,9 @@ Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Activities,mia mia 
 Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Activities,mia mia (houses or shelter),they are waterproofed in preparation for makuru
 Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Activities,Yongar (Kangaroo),Kangaroo skin is used to prepare for Makura
 Noongar Boodjar,Noongar,Djeran,season of adulthood,April,May,Activities,mia mia (houses or shelter),faced in the right direction for makuru
+Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Weather,Rainfall (mm),132.3
+Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Weather,Max Temperature ℃,19.1
+Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Weather,Min Temperature ℃,8.4
 Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Weather,Temperature,the coldest time of the year
 Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Weather,Rain,Rain replenishes inland water supplies
 Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Weather,Rain,wettest time of the year
@@ -134,6 +146,9 @@ Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Colour,Blue ,symbol
 Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Activities,Yonga (Kangaroo),(bookas) animal skin cloaks that were used as the nights became much cooler
 Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Activities,Yonga (Kangaroo),bones and sinew used for hunting tools such as spears
 Noongar Boodjar,Noongar,Makuru,season of fertility,June,July,Activities,Movement,time to move inland as more food available
+Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Weather,Rainfall (mm),96.2
+Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Weather,Max Temperature ℃,20
+Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Weather,Min Temperature ℃,9.1
 Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Colour,Pink,symbolises the growth of wildflowers and plants
 Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Weather,Temperature,transitional time of the year
 Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Weather,Cool Temperatures,cold days and nights
@@ -171,6 +186,9 @@ Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Activities,
 Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Activities,Young,new borns are out with their parent while they are providing food
 Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Activities,Young,new borns are being guided through foraging tasks by parent
 Noongar Boodjar,Noongar,Djilba,season of conception,August,September,Activities,Young,new borns are out with parent as they protect the family from larger animals and other people
+Noongar Boodjar,Noongar,Kambarang,season of birth,October,November,Weather,Rainfall (mm),30.6
+Noongar Boodjar,Noongar,Kambarang,season of birth,October,November,Weather,Max Temperature ℃,25.2
+Noongar Boodjar,Noongar,Kambarang,season of birth,October,November,Weather,Min Temperature ℃,13.1
 Noongar Boodjar,Noongar,Kambarang,season of birth,October,November,Weather,Temperature,Transformational time of year
 Noongar Boodjar,Noongar,Kambarang,season of birth,October,November,Weather,Warm Temperatures,"definite warming trend, as warm changhe in weather"
 Noongar Boodjar,Noongar,Kambarang,season of birth,October,November,Weather,Dry,Longer dry periods
