@@ -1,9 +1,12 @@
+# Import Streamlit to build the interactive season-finder page.
 import streamlit as st
 
+# Import the shared dataset loader and the season-scoring function.
 from data_processing.data_loader import load_data
 from data_processing.season_matcher import calculate_season_scores
 
 
+# Configure the page's browser title, icon, and wide layout.
 st.set_page_config(
     page_title="Season Finder",
     page_icon="🔎",
@@ -11,9 +14,13 @@ st.set_page_config(
 )
 
 
+# Load the cleaned seasonal dataset once for this page run.
 df = load_data()
 
+# Group selectable signs by category; each category has a question and options.
+# These labels are passed to the scorer, which maps them to dataset matching rules.
 SECTION_CONFIG = {
+    # Signs about birds, paired with the question shown above their choices.
     "Birds": {
         "question": "What birds are you noticing?",
         "options": [
@@ -32,6 +39,7 @@ SECTION_CONFIG = {
             "rainbow bee-eaters",
         ],
     },
+    # Signs about reptiles and amphibians.
     "Reptiles": {
         "question": "What reptile activity are you noticing?",
         "options": [
@@ -48,6 +56,7 @@ SECTION_CONFIG = {
             "motorbike frogs"
         ],
     },
+    # Signs about mammals.
     "Mammals": {
         "question": "What mammals are you noticing?",
         "options": [
@@ -57,6 +66,7 @@ SECTION_CONFIG = {
             "quendas",
         ],
     },
+    # Signs about fish, shellfish, and other marine life.
     "Marine": {
         "question": "What marine life are you noticing?",
         "options": [
@@ -73,6 +83,7 @@ SECTION_CONFIG = {
             "whales migrating",
         ],
     },
+    # Signs about insects and their activity.
     "Insects": {
         "question": "What insect activity are you noticing?",
         "options": [
@@ -80,6 +91,7 @@ SECTION_CONFIG = {
             "fly ants",
         ],
     },
+    # Signs about native trees and other woody plants.
     "Trees": {
         "question": "What native trees can you see?",
         "options": [
@@ -100,6 +112,7 @@ SECTION_CONFIG = {
             "rottnest island tea tree",
         ],
     },
+    # Signs about flowering plants and fruit.
     "Flowers and Fruits": {
         "question": "What flowers and fruits are you seeing?",
         "options": [
@@ -119,6 +132,7 @@ SECTION_CONFIG = {
             "zamia",
         ],
     },
+    # Signs about winds and storms.
     "Winds / Storms": {
         "question": "What wind or storm conditions are you noticing?",
         "options": [
@@ -133,6 +147,7 @@ SECTION_CONFIG = {
             "windy days",
         ],
     },
+    # Signs describing current or seasonal rainfall.
     "Rain": {
         "question": "What current rainfall patterns are you experiencing?",
         "options": [
@@ -147,6 +162,7 @@ SECTION_CONFIG = {
             "second rains",
         ],
     },
+    # Signs describing temperatures and seasonal changes in warmth or cold.
     "Temperature": {
         "question": "How do the temperatures feel right now?",
         "options": [
@@ -167,6 +183,7 @@ SECTION_CONFIG = {
             "longer dry periods"
         ],
     },
+    # Signs describing visible cloud or sky conditions.
     "Sky": {
         "question": "What sky conditions are you noticing?",
         "options": [
@@ -177,40 +194,53 @@ SECTION_CONFIG = {
 }
 
 
+# Introduce the page and explain what the user should select.
 st.title("What season are you in?")
 st.write("Pick indicators that you are noticing around you.")
 
+# Store each category's selections under that category name.
 selected_by_section = {}
+# Create one heading and multi-select widget for every configured category.
 for section_name, config in SECTION_CONFIG.items():
+    # Label the current category.
     st.subheader(section_name)
+    # Save the selected option values for this category.
     selected_by_section[section_name] = st.multiselect(
         config["question"],
         config["options"],
     )
 
 
+# Run the matching workflow only when the user presses the button.
 if st.button("Find Season"):
+    # Flatten all category selections into one list of signs to match.
     selected_observations = [
         item
         for values in selected_by_section.values()
         for item in values
     ]
 
+    # Require at least one selection before asking the scorer for results.
     if not selected_observations:
         st.warning("Select at least one sign before finding a season.")
     else:
+        # Count matching selected signs for each season in the dataset.
         scores = calculate_season_scores(df, selected_observations)
+        # Find the largest score, using zero if the result mapping is empty.
         highest_score = max(scores.values(), default=0)
 
+        # A zero high score means none of the selected signs matched any season.
         if highest_score == 0:
             st.warning(
                 "None of those signs matched the dataset. Try a different selection."
             )
         else:
+            # Collect every season tied for the greatest matching-sign score.
             leading_seasons = [
                 season for season, score in scores.items() if score == highest_score
             ]
 
+            # Give a single-season result a distinct message from a tie.
             if len(leading_seasons) == 1:
                 st.success(
                     f"Most likely season: **{leading_seasons[0]}** "
@@ -223,7 +253,9 @@ if st.button("Find Season"):
                     f"({highest_score} matching signs each)"
                 )
 
+            # Sort scores highest-first, then alphabetically to break ties consistently.
             ranking = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
+            # Add a heading and show every season's score in a compact table.
             st.subheader("Season matching scores")
             st.dataframe(
                 {

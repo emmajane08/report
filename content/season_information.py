@@ -1,7 +1,11 @@
+# Store the display title, descriptive text, and source list for each season.
 SEASON_INFORMATION = {
 
+    # Information shown when the user opens Birak.
     "Birak": {
+        # Short display heading including the season's approximate months.
         "title": "Birak (December - January)",
+        # Multi-paragraph background shown on the season detail page.
         "text": """
         Birak is known as the first summer in the Noongar seasonal calendar, occurring during December and January. This season is characterised by hot, dry weather as rainfall decreases. Easterly winds bring warm conditions in the morning, while afternoon sea breezes provide cooler air, particularly along the coast. Birak is associated with the colours red and brown, symbolising heat, the sun and fire. 
 
@@ -10,6 +14,7 @@ SEASON_INFORMATION = {
         Traditionally, Birak marks the beginning of fire season for Noongar people, who use mosaic patterned burning to reduce undergrowth, improve movement across Country, and encourage seed germination. Burning also helps bring out the animals into the open, making hunting easier.  During the season, food resources become available in coastal lakes, rivers and estuaries, including mullet, bream, marron and crabs. 
         
         """,
+        # Semicolon-separated references rendered individually by the season card.
         "source": (
             "GESB - Noongar Six Seasons: https://www.dbca.wa.gov.au/management/parks-and-reserves/noongar-six-seasons; "
             "Rottnest Island - Your Guide to the Six Noongar Seasons on Wadjemup: https://www.rottnestisland.com/visit/guides-trips/our-guide-to-the-six-noongar-seasons-on-wadjemup; "
@@ -19,8 +24,11 @@ SEASON_INFORMATION = {
         )
     },
 
+    # Information shown when the user opens Bunuru.
     "Bunuru": {
+        # Short display heading including the season's approximate months.
         "title": "Bunuru (February - March)",
+        # Multi-paragraph background shown on the season detail page.
         "text": """
        Bunuru is known as the second summer in the Noongar seasonal calendar, occurring during February and March. It is the hottest time of the year, with long hot days and little to no rainfall. Hot easterly winds bring warm conditions, while afternoon sea breezes provide some cooler air, particularly near the coast. Bunuru is associated with the colour orange, which symbolises the abundance of fishing opportunities and the lack of rain.
 
@@ -28,6 +36,7 @@ SEASON_INFORMATION = {
 
        Traditionally, Bunuru was a time when Noongar people moved towards coastal areas, rivers and estuaries to access food and water during the hot weather. Fishing, hunting and gathering are important activities, where seafood and freshwater foods form the main part of their diet. Food sources included fish, mussels, crabs and marron, while flowering plants provided nectar. Zamia is also considered an important food source, although its toxins need to be removed before it can be eaten.
         """,
+        # Semicolon-separated references rendered individually by the season card.
         "source": (
             "GESB - Noongar Six Seasons: https://www.dbca.wa.gov.au/management/parks-and-reserves/noongar-six-seasons; "
             "Rottnest Island - Your Guide to the Six Noongar Seasons on Wadjemup: https://www.rottnestisland.com/visit/guides-trips/our-guide-to-the-six-noongar-seasons-on-wadjemup; "
@@ -37,8 +46,11 @@ SEASON_INFORMATION = {
         )
     },
 
+    # Information shown when the user opens Djeran.
     "Djeran": {
+        # Short display heading including the season's approximate months.
         "title": "Djeran (April - May)",
+        # Multi-paragraph background shown on the season detail page.
         "text": """
        Djeran is known as the autumn season in the Noongar seasonal calendar, occurring duing April and May. It marks the end of the hottest weather and the arrival of cooler conditions where the nights become cooler, mornings are dewy, and winds begin coming from southerly and south-westerly directions. Djeran is associated with the colour green, symbolising the changing landscape and cooler weather as Country prepares for the winter rains.
 
@@ -46,6 +58,7 @@ SEASON_INFORMATION = {
 
        Traditionally, Djeran was a time for Noongar people to collect and prepare food resources while preparing for the colder and wetter months ahead. Foods included Zamia seeds that had been collected and processed, Yanget (bullrush) root bulbs, freshwater fish, frogs and turtles. Fishing and hunting also continued during this season, with kangaroos and emus providing additional food resources. As the weather became cooler and wetter, Noongar people repaired and waterproofed their mia mias (shelters) to prepare for the winter rains.
         """,
+        # Semicolon-separated references rendered individually by the season card.
         "source": (
             "GESB - Noongar Six Seasons: https://www.dbca.wa.gov.au/management/parks-and-reserves/noongar-six-seasons; "
             "Rottnest Island - Your Guide to the Six Noongar Seasons on Wadjemup: https://www.rottnestisland.com/visit/guides-trips/our-guide-to-the-six-noongar-seasons-on-wadjemup; "
@@ -55,8 +68,11 @@ SEASON_INFORMATION = {
         )
     },
 
+    # Information shown when the user opens Makuru.
     "Makuru": {
+        # Short display heading including the season's approximate months.
         "title": "Makuru (June - July)",
+        # Multi-paragraph background shown on the season detail page.
         "text": """
         Makuru is known as winter in the Noongar seasonal calendar, occurring during June and July. It is generally the coldest, wettest and windiest time of the year, with heavy rainfall, strong westerly winds and colder conditions, which help to replenish waterways and inland water supplies. Makuru is associated with the colour blue, symbolising the rain and cold weather of the season. 
 
@@ -64,6 +80,7 @@ SEASON_INFORMATION = {
 
         Traditionally, Noongar people moved inland from coastal areas during Makuru to avoid the cold coastal winds and access land-based food sources. Kangaroos were an important source of meat, while their skins were used to make bookas, or warm cloaks, and their bones and sinews were used to make tools. Other food sources included wild carrots, wild potatoes and pink tuber roots, while moulting black swans were easier to catch because they were temporarily unable to fly. The increasing rainfall also replenished waterways, supporting the seasonal movement towards inland areas.
         """,
+        # Semicolon-separated references rendered individually by the season card.
         "source": (
             "GESB: Noongar Six Seasons: https://www.dbca.wa.gov.au/management/parks-and-reserves/noongar-six-seasons; "
             "Rottnest Island - Your Guide to the Six Noongar Seasons on Wadjemup: https://www.rottnestisland.com/visit/guides-trips/our-guide-to-the-six-noongar-seasons-on-wadjemup; "
@@ -73,8 +90,11 @@ SEASON_INFORMATION = {
         )
     },
 
+    # Information shown when the user opens Djilba.
     "Djilba": {
+        # Short display heading including the season's approximate months.
         "title": "Djilba (August - September)",
+        # Multi-paragraph background shown on the season detail page.
         "text": """
         Djilba is the first spring, with cold, clear days and nights mixed with warmer, rainy and windy weather and occasional sunshine, occurring during August and September. Djilba is associated with the colour pink, symbolising the growth of plants and wildflowers. As winter rains ease and temperatures rise, the landscape begins to bloom.
 
@@ -82,6 +102,7 @@ SEASON_INFORMATION = {
         
         Traditionally, as the weather warmed and water sources were replenished, Noongar groups moved to areas such as Guildford, Canning and Kelmscott, where they could access food and water. Food sources included kangaroos, emus and possums, alongside roots, tubers, tortoises, berries and eggs from waterbirds. Flowering plants also indicated that food sources, including lemon myrtle, were becoming available again.
         """,
+        # Semicolon-separated references rendered individually by the season card.
         "source": (
             "GESB - Noongar Six Seasons: https://www.dbca.wa.gov.au/management/parks-and-reserves/noongar-six-seasons; "
             "Rottnest Island - Your Guide to the Six Noongar Seasons on Wadjemup: https://www.rottnestisland.com/visit/guides-trips/our-guide-to-the-six-noongar-seasons-on-wadjemup; "
@@ -91,8 +112,11 @@ SEASON_INFORMATION = {
         )
     },
 
+    # Information shown when the user opens Kambarang.
     "Kambarang": {
+        # Short display heading including the season's approximate months.
         "title": "Kambarang (October - November)",
+        # Multi-paragraph background shown on the season detail page.
         "text": """
         Kambarang is the second spring, characterised by warmer weather, longer dry periods and fewer cold fronts, occurring in October and November. Kambarang is associated with the colour yellow, symbolising the return of hot weather. As temperatures rise, the landscape undergoes significant transformation.
 
@@ -100,6 +124,7 @@ SEASON_INFORMATION = {
 
         Traditionally, during Kambarang Noongar families moved back towards the coast to access seasonal food sources. Foods included frogs, tortoises, freshwater crayfish, fish, fruits, berries, yams and bird eggs. Quandong fruits and other berries began ripening, while people gathered fruit and berries as they travelled towards the coast. 
         """,
+        # Semicolon-separated references rendered individually by the season card.
         "source": (
             "GESB - Noongar Six Seasons: https://www.dbca.wa.gov.au/management/parks-and-reserves/noongar-six-seasons; "
             "Rottnest Island - Your Guide to the Six Noongar Seasons on Wadjemup: https://www.rottnestisland.com/visit/guides-trips/our-guide-to-the-six-noongar-seasons-on-wadjemup; "

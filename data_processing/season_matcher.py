@@ -1,13 +1,19 @@
 """Match user-selected seasonal signs against the calendar dataset."""
 
+# This module maps selected signs to dataset text and scores each season.
+# Import types used to describe iterable selections and row/rule mappings.
 from collections.abc import Iterable, Mapping
 
 
+# Normalize text consistently before comparing user choices with dataset values.
 def _normalise(value: object) -> str:
     """Normalise text for case-insensitive, whitespace-tolerant matching."""
+    # Replace non-breaking spaces, ignore case, collapse whitespace, and trim ends.
     return " ".join(str(value).replace("\u00a0", " ").casefold().split())
 
 
+# Map each selectable observation to one or more matching clauses.
+# Terms inside a clause are alternatives; name and description terms must both match.
 MATCH_RULES = {
     "fledglings": [{"name_terms": ("fledgling", "fledgings"), "description_terms": ("nest", "parents")}],
     "magpies": [{"name_terms": ("magpie", "koolbardi"), "description_terms": ("swooping", "protecting", "babies", "young")}],
@@ -119,8 +125,10 @@ MATCH_RULES = {
     "sea breeze": [{"name_terms": ("sea breeze", "afternoon sea breeze")},],
 }
 
+# Create a normalized-key version of the rules for case- and whitespace-insensitive lookup.
 MATCH_RULES_BY_KEY = { _normalise(key): value for key, value in MATCH_RULES.items() }
 
+# Translate alternate user-facing phrases to the canonical matching-rule keys.
 MATCH_ALIASES = {
     "little or no rain": "little to no rainfall",
     "some days are rainy": "some days are cool and rainy",
@@ -129,13 +137,17 @@ MATCH_ALIASES = {
 }
 
 
+# Check whether one dataset row satisfies a single matching clause.
 def _matches_clause(row: Mapping[str, object], clause: Mapping[str, tuple[str, ...]]) -> bool:
+    # Normalize the row's indicator name and description before searching them.
     indicator_name = _normalise(row["Indicator_Name"])
     description = _normalise(row["Description"])
 
+    # Read optional search terms; empty terms mean that field needs no filtering.
     name_terms = clause.get("name_terms", ())
     description_terms = clause.get("description_terms", ())
 
+    # Require at least one matching term per non-empty field in the clause.
     return (
         (not name_terms or any(_normalise(term) in indicator_name for term in name_terms))
         and (
@@ -145,31 +157,42 @@ def _matches_clause(row: Mapping[str, object], clause: Mapping[str, tuple[str, .
     )
 
 
+# Score each season by how many distinct selected signs have a matching row there.
 def calculate_season_scores(data, selected_observations: Iterable[str]) -> dict[str, int]:
     """Score each season by the number of selected signs it contains."""
+    # Remove duplicate selections while preserving the user's selection order.
     selected = list(dict.fromkeys(selected_observations))
+    # Normalize each selection and replace known aliases with canonical names.
     canonical_selected = []
     for item in selected:
         observation = _normalise(item)
         canonical_selected.append(MATCH_ALIASES.get(observation, observation))
 
+    # Find selections that do not have a corresponding matching rule.
     unknown = set(canonical_selected).difference(MATCH_RULES_BY_KEY)
+    # Fail clearly instead of silently ignoring unsupported selections.
     if unknown:
         raise ValueError(f"No matching rule is defined for: {', '.join(sorted(unknown))}")
 
+    # Group the DataFrame rows by season and convert each group to row dictionaries.
     season_rows = {
         season: rows.to_dict("records")
         for season, rows in data.groupby("Season_Name")
     }
+    # Initialize a zero score for each season in alphabetical order.
     scores = {season: 0 for season in sorted(season_rows)}
 
+    # Check every selected sign against the rows for every season.
     for observation in canonical_selected:
         for season, rows in season_rows.items():
+            # Award one point when any row satisfies any clause for this sign.
             if any(
                 _matches_clause(row, clause)
                 for row in rows
                 for clause in MATCH_RULES_BY_KEY[observation]
             ):
+                # Count this sign once for the season, even if several rows match.
                 scores[season] += 1
 
+    # Return season names mapped to their matching-sign totals.
     return scores
